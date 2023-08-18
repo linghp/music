@@ -1,6 +1,9 @@
-apply plugin: 'com.android.application'
-
+plugins {
+    id 'com.android.application'
+}
 android {
+    namespace 'com.hf.test'
+
     signingConfigs {
         debug {
             storeFile file('hifiveplayer.jks')
@@ -17,12 +20,11 @@ android {
 
     }
 
-    compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.hifiveai.openplayer"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         // 这里添加
@@ -43,8 +45,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
 
@@ -56,13 +58,6 @@ android {
     sourceSets {
         main.jni.srcDirs = []
         main.jniLibs.srcDirs = ['libs']
-    }
-}
-
-
-repositories {
-    maven {
-        url 'http://172.16.52.62:8081/repository/hifive_repository'
     }
 }
 

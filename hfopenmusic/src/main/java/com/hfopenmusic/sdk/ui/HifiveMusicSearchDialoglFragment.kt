@@ -406,7 +406,7 @@ class HifiveMusicSearchDialoglFragment() : DialogFragment() {
                     if (ty == Refresh && (totalCount == 0 || musicModels == null || musicModels!!.isEmpty())) {
                         isRecommand = true
                         page = 1
-                        login()
+//                        login()
                     } else {
                         isRecommand = false
                         mHandler.sendEmptyMessage(ty)

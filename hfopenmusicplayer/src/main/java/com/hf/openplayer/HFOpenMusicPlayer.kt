@@ -95,9 +95,9 @@ class HFOpenMusicPlayer private constructor() {
      * @return
      */
     @JvmOverloads
-    fun showPlayer(activity: FragmentActivity, marginTop: Int = 0, marginBottom: Int = 0) = apply {
-        if (globalContext == null) return@apply
-        HFPlayer.getInstance().showPlayer(activity, marginTop, marginBottom)
+    fun showPlayer(activity: FragmentActivity, marginTop: Int = 0, marginBottom: Int = 0): HFPlayer? {
+        if (globalContext == null) return null
+        return HFPlayer.getInstance().showPlayer(activity, marginTop, marginBottom)
                 .setListener(object : HFPlayerViewListener {
                     override fun onClick() {
                         Log.e("HFPlayerViewListener", "onClick")

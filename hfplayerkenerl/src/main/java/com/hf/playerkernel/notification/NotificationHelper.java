@@ -155,7 +155,7 @@ public class NotificationHelper {
     private PendingIntent getReceiverPendingIntent(Context context, String type , int code) {
         Intent intent = new Intent(NotificationStatusBarReceiver.ACTION_STATUS_BAR);
         intent.putExtra(NotificationStatusBarReceiver.EXTRA, type);
-        return PendingIntent.getBroadcast(context, code, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, code, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 

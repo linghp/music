@@ -13,10 +13,10 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.hf.openplayer.HFOpenMusicPlayer;
 import com.hf.playerkernel.manager.HFPlayerApi;
-import com.hfopen.sdk.rx.BaseException;
-import com.hfopenmusic.sdk.HFOpenMusic;
 import com.hfopen.sdk.common.HFOpenCallback;
 import com.hfopen.sdk.manager.HFOpenApi;
+import com.hfopen.sdk.rx.BaseException;
+import com.hfopenmusic.sdk.HFOpenMusic;
 import com.tencent.bugly.crashreport.CrashReport;
 
 public class LoginActivity extends AppCompatActivity {

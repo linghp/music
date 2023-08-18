@@ -3,8 +3,11 @@ package com.hf.player.view
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
+import android.net.Uri
+import android.os.SystemClock
 import android.util.AttributeSet
-import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -18,12 +21,11 @@ import com.hf.player.utils.NoDoubleClickListener
 import com.hf.player.utils.RoundedCornersTransform
 import com.hf.playerkernel.config.MusicPlayAction
 import com.hf.playerkernel.inter.HFPlayerEventListener
-import com.hf.playerkernel.manager.HFPlayerApi
 import com.hf.playerkernel.manager.HFPlayerApi.with
-import com.hf.playerkernel.model.AudioBean
 import com.hf.playerkernel.playback.IjkPlayback
 import com.hf.playerkernel.utils.DisplayUtils
 import java.util.*
+
 
 /**
  * 播放器悬浮窗view
@@ -39,12 +41,12 @@ open class HifivePlayerView(context: FragmentActivity, attrs: AttributeSet?, def
     private var tvMusicInfo: TextView? = null
     private var tvAccompany: TextView? = null
     private var cbLyric: CheckBox? = null
-    private var ivLast: ImageView? = null
+     var ivLast: ImageView? = null
     private var pbPlay: SeekBar? = null
     private var ivPlay: ImageView? = null
     private var flLoading //加载中的layout
             : FrameLayout? = null
-    private var ivNext: ImageView? = null
+     var ivNext: ImageView? = null
     private var ivBack: ImageView? = null
     private var isPlay //是否正在播放
             = false
@@ -64,6 +66,7 @@ open class HifivePlayerView(context: FragmentActivity, attrs: AttributeSet?, def
             = false
     private var isExpanded //判断是否展开
             = false
+    private var isInitTouched=false
 
     constructor(context: FragmentActivity) : this(context, null, 0) {
     }
@@ -154,6 +157,17 @@ open class HifivePlayerView(context: FragmentActivity, attrs: AttributeSet?, def
                 }
             }
         })
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if(!isInitTouched) {
+            isInitTouched=true
+            handler.postDelayed({
+                simulateTouch(ivMusic!!)
+//            HFPlayer.getInstance().mListener?.onClick()
+            }, 1000)
+        }
     }
 
     //显示加载view
@@ -266,7 +280,7 @@ open class HifivePlayerView(context: FragmentActivity, attrs: AttributeSet?, def
     /**
      * 开始播放歌曲
      */
-    private fun startPlay() {
+     fun startPlay() {
         if (playUrl.isNullOrEmpty()) return
         startPlayMusic(playUrl!!, false)
     }
@@ -379,19 +393,21 @@ open class HifivePlayerView(context: FragmentActivity, attrs: AttributeSet?, def
 
     private fun initPlayListener() {
         hfPlayer = with()
-        hfPlayer!!.setOnPlayEventListener(object : HFPlayerEventListener {
+        hfPlayer?.setOnPlayEventListener(object : HFPlayerEventListener {
             override fun onPlayStateChanged(state: Int) {
                 when (state) {
                     MusicPlayAction.STATE_IDLE -> {
                     }
                     MusicPlayAction.STATE_PAUSE -> if (hfPlayer != null) {
                         pausePlay()
+//                        mediaPlayer?.pause()
                     }
                     MusicPlayAction.STATE_ERROR -> {
                         isError = true
                         hfPlayer!!.stop()
                         clear()
                         HFPlayer.getInstance().mListener?.onError()
+                        mediaPlayer?.stop()
                     }
                     MusicPlayAction.STATE_PREPARING -> pbPlay!!.max = hfPlayer!!.duration.toInt()
                     MusicPlayAction.STATE_PLAYING -> {
@@ -399,12 +415,14 @@ open class HifivePlayerView(context: FragmentActivity, attrs: AttributeSet?, def
                         ivPlay!!.setImageResource(R.drawable.hifivesdk_icon_player_play)
                         showPlayView()
                         startAnimationPlay()
+                        mediaPlayer?.start()
                     }
                     MusicPlayAction.STATE_BUFFERING -> showLoadView()
                     MusicPlayAction.STATE_COMPLETE -> {
                         pausePlay()
                         clear()
                         HFPlayer.getInstance().mListener?.onComplete()
+                        mediaPlayer?.pause()
                     }
                 }
             }
@@ -423,11 +441,39 @@ open class HifivePlayerView(context: FragmentActivity, attrs: AttributeSet?, def
         })
     }
 
+    private var mediaPlayer: MediaPlayer? = null
     init {
         mContext = context
         inflate(mContext, R.layout.hifive_window_ijkplayer, this)
         initView()
         initPlayListener()
         initEvent()
+        mediaPlayer = MediaPlayer.create(context, Uri.EMPTY)
+        if(mediaPlayer?.isPlaying==true){
+            mediaPlayer?.stop()
+        }
+    }
+
+    private fun simulateTouch(view: View) {
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+        val x = location[0].toFloat()+10
+        val y = location[1].toFloat()+10
+        val downTime = SystemClock.uptimeMillis()
+        var eventTime = SystemClock.uptimeMillis()
+        var action = MotionEvent.ACTION_DOWN
+        val metaState = 0
+        var motionEvent = MotionEvent.obtain(
+            downTime, eventTime, action, x, y, metaState
+        )
+        view.dispatchTouchEvent(motionEvent)
+
+        // 模拟一个稍微延迟后的 "UP" 事件
+        action = MotionEvent.ACTION_UP
+        eventTime = SystemClock.uptimeMillis() + 100 // 加入一点延迟
+        motionEvent = MotionEvent.obtain(
+            downTime, eventTime, action, x, y, metaState
+        )
+        view.dispatchTouchEvent(motionEvent)
     }
 }

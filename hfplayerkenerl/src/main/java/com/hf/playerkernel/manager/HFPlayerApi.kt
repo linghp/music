@@ -231,12 +231,12 @@ object HFPlayerApi {
      */
     @JvmStatic
     fun with(): IjkPlayback? {
-//        if(mPlayService == null){
-//            bindService()
-//        }
+        if(mPlayService == null){
+            bindService()
+        }
 
         if (mPlayService == null) {
-            MusicLogUtils.e("PlayService" + "mPlayService is null")
+            MusicLogUtils.e("PlayService " + "mPlayService is null")
             return null
         }
         return mPlayService?.playback

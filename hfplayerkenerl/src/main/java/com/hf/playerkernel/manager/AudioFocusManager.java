@@ -1,6 +1,7 @@
 package com.hf.playerkernel.manager;
 
 import android.media.AudioManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -54,6 +55,7 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
      */
     @Override
     public void onAudioFocusChange(int focusChange) {
+        Log.i("AudioFocusManager","focusChange:"+focusChange);
         int volume;
         switch (focusChange) {
             // 重新获得焦点

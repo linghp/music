@@ -1,14 +1,16 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
 
-apply from: 'aar-upload.gradle'
 android {
-    compileSdkVersion 30
+    namespace 'com.hfopenmusic.sdk'
+
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.2.1.5"
         consumerProguardFiles "consumer-rules.pro"
@@ -21,8 +23,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 repositories {

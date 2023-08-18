@@ -9,17 +9,20 @@
 
     <application>
         <service android:name="com.hf.playerkernel.service.PlayService" />
-        <receiver android:name="com.hf.playerkernel.receiver.NotificationStatusBarReceiver">
+        <receiver android:name="com.hf.playerkernel.receiver.NotificationStatusBarReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="ACTION_STATUS_BAR" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.hf.playerkernel.receiver.EarphoneControlReceiver">
+        <receiver android:name="com.hf.playerkernel.receiver.EarphoneControlReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.hf.playerkernel.receiver.AudioBroadcastReceiver">
+        <receiver android:name="com.hf.playerkernel.receiver.AudioBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="cn.hf.lock" />
             </intent-filter>

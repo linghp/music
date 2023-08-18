@@ -6,6 +6,7 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hfopen.sdk.entity.MusicList;
 import com.hfopen.sdk.entity.MusicRecord;
+import com.hfopen.sdk.hInterface.DataResponse;
+import com.hfopen.sdk.manager.HFOpenApi;
+import com.hfopen.sdk.rx.BaseException;
 import com.hfopenmusic.sdk.HFOpenMusic;
 import com.hfopenmusic.sdk.R;
 import com.hfopenmusic.sdk.adapter.BaseRecyclerViewAdapter;
@@ -103,6 +108,7 @@ public class HifiveMusicPalyListFragment extends Fragment implements Observer {
             adapter.updateDatas(HFOpenMusic.getInstance().getCurrentList());
         }else{
             adapter.addEmptyView(R.layout.hifive_recycler_emptyview2);
+            getHotMusic();
         }
     }
     //弹窗删除二次确认框
@@ -161,5 +167,22 @@ public class HifiveMusicPalyListFragment extends Fragment implements Observer {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void getHotMusic() {
+        HFOpenApi.getInstance().baseHot(System.currentTimeMillis()/1000,  365, 1, 20, new DataResponse<MusicList>() {
+                    @Override
+                    public void onError(@NonNull BaseException e) {
+                        Toast.makeText(getActivity(), "请求网络失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(MusicList musicList, @NonNull String s) {
+                        if (musicList.getRecord().size() > 0)
+                            HFOpenMusic.getInstance().updateCurrentList(musicList.getRecord());
+                        else
+                            Toast.makeText(getActivity(), "没有找到歌曲", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

@@ -24,7 +24,7 @@ import java.lang.ref.WeakReference;
  * 播放器UI
  */
 public class HFPlayer {
-    private HifivePlayerView mPlayerView;
+    public HifivePlayerView mPlayerView;
     private static volatile HFPlayer mInstance;
     private WeakReference<FrameLayout> mContainer;
     public static boolean isAttached;
@@ -61,7 +61,7 @@ public class HFPlayer {
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.START | Gravity.BOTTOM;
-            params.setMargins(0, params.topMargin, params.rightMargin, DisplayUtils.getScreenHeight(activity) / 24 + DisplayUtils.getPlayerHeight(activity));
+//            params.setMargins(0, params.topMargin, params.rightMargin, DisplayUtils.getScreenHeight(activity) / 24 + DisplayUtils.getPlayerHeight(activity));
             mPlayerView.setLayoutParams(params);
             if (getContainer() != null) {
                 getContainer().addView(mPlayerView);
